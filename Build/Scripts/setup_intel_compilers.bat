@@ -17,27 +17,27 @@ IF "%SETUP_IFORT_COMPILER_64%"=="1" GOTO envexist
     echo "    Intel compilers probably not installed."
     exit /b
   )
-  IF NOT DEFINED I_MPI_ROOT (
+  IF NOT DEFINED I_MPI_ONEAPI_ROOT (
     echo "*** Error: Intel MPI environment variable, I_MPI_ROOT, not defined."
     echo "    Intel MPI development environment probably not installed."
     exit /b
   )
 
   echo Setting up compiler environment
-  set STARTUP="%IFORT_COMPILER%\bin\compilervars"
+  set STARTUP="%IFORT_COMPILER%..\..\..\setvars"
 :: the compilervars script overwrites the mpi library locattion so we have to save it
 :: (the mpi install puts the mpi library in a different place than the Fortran install)
-  set "I_MPI_ROOT_SAVE=%I_MPI_ROOT%"
+  set "I_MPI_ROOT_SAVE=%I_MPI_ONEAPI_ROOT%"
   call %STARTUP% intel64
 
   echo Setting up MPI environment
   set "I_MPI_ROOT=%I_MPI_ROOT_SAVE%"
-  set I_MPI_RELEASE_ROOT=%I_MPI_ROOT%\intel64\lib
-  set   I_MPI_DEBUG_ROOT=%I_MPI_ROOT%\intel64\lib
-  IF DEFINED IFORT_COMPILER19 set I_MPI_RELEASE_ROOT=%I_MPI_ROOT%\intel64\lib\release
-  IF DEFINED IFORT_COMPILER19 set I_MPI_DEBUG_ROOT=%I_MPI_ROOT%\intel64\lib\debug
-  IF DEFINED IFORT_COMPILER20 set I_MPI_RELEASE_ROOT=%I_MPI_ROOT%\intel64\lib\release
-  IF DEFINED IFORT_COMPILER20 set I_MPI_DEBUG_ROOT=%I_MPI_ROOT%\intel64\lib\debug
+  set I_MPI_RELEASE_ROOT=%I_MPI_ROOT%\lib
+  set   I_MPI_DEBUG_ROOT=%I_MPI_ROOT%\lib
+  IF DEFINED IFORT_COMPILER19 set I_MPI_RELEASE_ROOT=%I_MPI_ROOT%\lib\release
+  IF DEFINED IFORT_COMPILER19 set I_MPI_DEBUG_ROOT=%I_MPI_ROOT%\lib\debug
+  IF DEFINED IFORT_COMPILER20 set I_MPI_RELEASE_ROOT=%I_MPI_ROOT%\lib\release
+  IF DEFINED IFORT_COMPILER20 set I_MPI_DEBUG_ROOT=%I_MPI_ROOT%\lib\debug
   call "%I_MPI_ROOT%\intel64\bin\mpivars" release
 
 :envexist
